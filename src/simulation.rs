@@ -5,7 +5,7 @@ pub struct SimulationPlugin;
 
 impl Plugin for SimulationPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(Grid::new_random(100, 100));
+        app.insert_resource(Grid::new_random(10, 10));
     }
 }
 
@@ -17,7 +17,7 @@ pub enum Cell {
 }
 
 impl Cell {
-    pub fn color(self) -> [u8; 4] {
+    pub fn rgba(self) -> [u8; 4] {
         match self {
             Cell::Red => [255, 0, 0, 255],
             Cell::Green => [0, 255, 0, 255],
@@ -68,5 +68,9 @@ impl Grid {
     pub fn set(&mut self, x: usize, y: usize, value: Cell) {
         let idx = self.idx(x, y);
         self.cells[idx] = value;
+    }
+
+    pub fn cells(&self) -> &[Cell] {
+        &self.cells
     }
 }

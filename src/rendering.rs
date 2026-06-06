@@ -14,6 +14,7 @@ pub struct RenderingPlugin;
 impl Plugin for RenderingPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_rendering);
+        app.add_systems(Update, update_texture);
     }
 }
 
@@ -38,6 +39,35 @@ fn setup_rendering(mut commands: Commands, mut images: ResMut<Assets<Image>>, gr
 
     commands.spawn((
         Sprite::from_image(image_handle),
-        Transform::from_scale(Vec3::splat(4.0)),
+        Transform::from_scale(Vec3::splat(50.0)),
     ));
+}
+
+fn update_texture(
+    grid: Res<Grid>,
+    texture: Res<AutomataTexture>,
+    mut images: ResMut<Assets<Image>>,
+) {
+    if !grid.is_changed() {
+        return;
+    }
+
+    let image = images
+        .get_mut(&texture.0)
+        .expect("Automata texture should exist");
+
+    let data = image
+        .data
+        .as_mut()
+        .expect("Image should have CPU-side data");
+
+    for (i, cell) in grid.cells().iter().enumerate() {
+        let pixel = cell.rgba();
+        let offset = i * 4;
+
+        data[offset] = pixel[0];
+        data[offset + 1] = pixel[1];
+        data[offset + 2] = pixel[2];
+        data[offset + 3] = pixel[3];
+    }
 }
