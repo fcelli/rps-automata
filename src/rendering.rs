@@ -6,8 +6,7 @@ use bevy::{
 
 use crate::grid::Grid;
 
-#[derive(Resource)]
-pub struct AutomataTexture(pub Handle<Image>);
+const PIXEL_SCALE: f32 = 4.0;
 
 pub struct RenderingPlugin;
 
@@ -17,6 +16,9 @@ impl Plugin for RenderingPlugin {
         app.add_systems(Update, update_texture);
     }
 }
+
+#[derive(Resource)]
+pub struct AutomataTexture(pub Handle<Image>);
 
 fn setup_rendering(mut commands: Commands, mut images: ResMut<Assets<Image>>, grid: Res<Grid>) {
     commands.spawn(Camera2d);
@@ -39,7 +41,7 @@ fn setup_rendering(mut commands: Commands, mut images: ResMut<Assets<Image>>, gr
 
     commands.spawn((
         Sprite::from_image(image_handle),
-        Transform::from_scale(Vec3::splat(50.0)),
+        Transform::from_scale(Vec3::splat(PIXEL_SCALE)),
     ));
 }
 

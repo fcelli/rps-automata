@@ -2,7 +2,7 @@ use crate::cell::Cell;
 use bevy::prelude::*;
 use rand::RngExt;
 
-#[derive(Resource)]
+#[derive(Resource, Clone)]
 pub struct Grid {
     pub width: usize,
     pub height: usize,
