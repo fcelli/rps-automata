@@ -4,7 +4,7 @@ use bevy::{
     render::render_resource::{Extent3d, TextureDimension, TextureFormat},
 };
 
-use crate::simulation::Grid;
+use crate::grid::Grid;
 
 #[derive(Resource)]
 pub struct AutomataTexture(pub Handle<Image>);
