@@ -13,4 +13,12 @@ impl Cell {
             Cell::Blue => [0, 0, 255, 255],
         }
     }
+
+    pub fn predator(self) -> Cell {
+        match self {
+            Cell::Red => Cell::Blue,
+            Cell::Green => Cell::Red,
+            Cell::Blue => Cell::Green,
+        }
+    }
 }

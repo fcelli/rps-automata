@@ -4,7 +4,8 @@ use bevy::{
     render::render_resource::{Extent3d, TextureDimension, TextureFormat},
 };
 
-use crate::{config::AppConfig, grid::Grid};
+use crate::automata::Grid;
+use crate::config::AppConfig;
 
 pub struct RenderingPlugin;
 
@@ -26,10 +27,12 @@ fn setup_rendering(
 ) {
     commands.spawn(Camera2d);
 
+    let (width, height) = grid.dimensions();
+
     let image = Image::new_fill(
         Extent3d {
-            width: grid.width as u32,
-            height: grid.height as u32,
+            width: width as u32,
+            height: height as u32,
             depth_or_array_layers: 1,
         },
         TextureDimension::D2,
@@ -66,7 +69,7 @@ fn update_texture(
         .as_mut()
         .expect("Image should have CPU-side data");
 
-    for (i, cell) in grid.cells().iter().enumerate() {
+    for (i, cell) in grid.cells().enumerate() {
         let pixel = cell.rgba();
         let offset = i * 4;
 

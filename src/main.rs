@@ -1,11 +1,10 @@
-mod cell;
+mod automata;
 mod config;
-mod grid;
 mod rendering;
 mod simulation;
 
+use crate::automata::Grid;
 use crate::config::AppConfig;
-use crate::grid::Grid;
 use crate::rendering::RenderingPlugin;
 use crate::simulation::SimulationPlugin;
 use bevy::prelude::*;
