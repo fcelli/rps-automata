@@ -4,9 +4,7 @@ use bevy::{
     render::render_resource::{Extent3d, TextureDimension, TextureFormat},
 };
 
-use crate::grid::Grid;
-
-const PIXEL_SCALE: f32 = 4.0;
+use crate::{config::AppConfig, grid::Grid};
 
 pub struct RenderingPlugin;
 
@@ -20,7 +18,12 @@ impl Plugin for RenderingPlugin {
 #[derive(Resource)]
 pub struct AutomataTexture(pub Handle<Image>);
 
-fn setup_rendering(mut commands: Commands, mut images: ResMut<Assets<Image>>, grid: Res<Grid>) {
+fn setup_rendering(
+    mut commands: Commands,
+    mut images: ResMut<Assets<Image>>,
+    grid: Res<Grid>,
+    config: Res<AppConfig>,
+) {
     commands.spawn(Camera2d);
 
     let image = Image::new_fill(
@@ -41,7 +44,7 @@ fn setup_rendering(mut commands: Commands, mut images: ResMut<Assets<Image>>, gr
 
     commands.spawn((
         Sprite::from_image(image_handle),
-        Transform::from_scale(Vec3::splat(PIXEL_SCALE)),
+        Transform::from_scale(Vec3::splat(config.pixel_scale)),
     ));
 }
 

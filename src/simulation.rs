@@ -1,19 +1,18 @@
-use crate::cell::Cell;
 use crate::grid::Grid;
+use crate::{cell::Cell, config::AppConfig};
 use bevy::prelude::*;
-
-const WIDTH: usize = 200;
-const HEIGHT: usize = 200;
-const PREDATORS_THRESHOLD: usize = 3;
 
 pub struct SimulationPlugin;
 
 impl Plugin for SimulationPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(Grid::new_random(WIDTH, HEIGHT))
-            .insert_resource(Time::<Fixed>::from_seconds(0.05))
+        app.add_systems(Startup, setup_simulation)
             .add_systems(FixedUpdate, step_automata);
     }
+}
+
+fn setup_simulation(mut commands: Commands, config: Res<AppConfig>) {
+    commands.insert_resource(Time::<Fixed>::from_hz(config.sim_tick_rate_hz));
 }
 
 fn predator_of(cell: Cell) -> Cell {
@@ -48,7 +47,7 @@ fn count_predators(grid: &Grid, x: usize, y: usize) -> usize {
     return count;
 }
 
-fn step_automata(mut grid: ResMut<Grid>) {
+fn step_automata(mut grid: ResMut<Grid>, config: Res<AppConfig>) {
     let mut next = grid.clone();
 
     for y in 0..grid.height {
@@ -57,7 +56,7 @@ fn step_automata(mut grid: ResMut<Grid>) {
             let predator = predator_of(current);
 
             let predators = count_predators(&grid, x, y);
-            if predators >= PREDATORS_THRESHOLD {
+            if predators >= config.predators_threshold {
                 next.set(x, y, predator);
             }
         }
