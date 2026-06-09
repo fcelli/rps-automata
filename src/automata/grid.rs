@@ -80,3 +80,83 @@ impl Grid {
         x + y * self.width
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    impl Grid {
+        pub fn new_filled(width: usize, height: usize, cell: Cell) -> Self {
+            let cells = vec![cell; width * height];
+            Self {
+                width: width,
+                height: height,
+                cells: cells,
+            }
+        }
+    }
+
+    #[test]
+    fn dimensions_are_correct() {
+        let cases = [(10, 10), (10, 5), (1, 1), (0, 0)];
+
+        for (width, height) in cases {
+            let grid = Grid::new_random(width, height);
+
+            assert_eq!(grid.dimensions(), (width, height));
+        }
+    }
+
+    #[test]
+    fn set_and_get_cell() {
+        let mut grid = Grid::new_random(2, 2);
+        let target = Cell::Red;
+
+        grid.set(0, 0, target);
+
+        assert_eq!(grid.get(0, 0), target);
+    }
+
+    #[test]
+    fn positions_cover_entire_grid() {
+        let grid = Grid::new_random(2, 2);
+
+        let positions: Vec<(usize, usize)> = grid.positions().collect();
+
+        assert_eq!(positions, vec![(0, 0), (1, 0), (0, 1), (1, 1)]);
+    }
+
+    #[test]
+    fn cells_iter_matches_storage_length() {
+        let grid = Grid::new_random(4, 3);
+
+        assert_eq!(grid.cells().count(), 12);
+    }
+
+    #[test]
+    fn get_checked_returns_none_out_of_bounds() {
+        let grid = Grid::new_random(2, 2);
+
+        assert_eq!(grid.get_checked(-1, 0), None);
+        assert_eq!(grid.get_checked(0, -1), None);
+        assert_eq!(grid.get_checked(2, 2), None);
+    }
+
+    #[test]
+    fn correct_number_of_neighbors() {
+        let mut grid = Grid::new_filled(2, 2, Cell::Red);
+        grid.set(0, 0, Cell::Blue);
+
+        assert_eq!(grid.count_matching_neighbors(0, 0, Cell::Red), 3);
+        assert_eq!(grid.count_matching_neighbors(1, 0, Cell::Red), 2);
+        assert_eq!(grid.count_matching_neighbors(0, 0, Cell::Blue), 0);
+        assert_eq!(grid.count_matching_neighbors(0, 1, Cell::Blue), 1);
+    }
+
+    #[test]
+    fn neighbors_exclude_center() {
+        let grid = Grid::new_filled(3, 3, Cell::Red);
+
+        assert_eq!(grid.count_matching_neighbors(1, 1, Cell::Red), 8);
+    }
+}
