@@ -27,6 +27,12 @@ jobs:
           libudev-dev \
           libasound2-dev
 
+    - name: Format Check
+      run: cargo fmt --all -- --check
+        
+    - name: Lint
+      run: cargo clippy --all-targets -- -D warnings
+
     - name: Build
       run: cargo build --verbose
 
