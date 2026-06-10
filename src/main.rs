@@ -15,7 +15,6 @@ fn main() {
         grid_height: 200,
         predators_threshold: 3,
         sim_tick_rate_hz: 20.0,
-        pixel_scale: 4.0,
     };
 
     let grid = Grid::new_random(config.grid_width, config.grid_height);
