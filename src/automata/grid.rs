@@ -89,9 +89,9 @@ mod tests {
         pub fn new_filled(width: usize, height: usize, cell: Cell) -> Self {
             let cells = vec![cell; width * height];
             Self {
-                width: width,
-                height: height,
-                cells: cells,
+                width,
+                height,
+                cells,
             }
         }
     }
